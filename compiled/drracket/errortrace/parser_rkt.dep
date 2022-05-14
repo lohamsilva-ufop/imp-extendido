@@ -1,0 +1,1 @@
+("8.3" ta6nt ("7734859f63b40cacc10f9984d37210fc84a2f3bf" . "fffa01e38d317edd515af7721b2c4ba25e49e9c7") (collects #"errortrace" #"errortrace-key.rkt") (collects #"imp-extendido" #"lexer.rkt") (collects #"imp-extendido" #"syntax.rkt") (collects #"parser-tools" #"yacc.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
