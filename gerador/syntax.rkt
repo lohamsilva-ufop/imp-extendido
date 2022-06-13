@@ -7,7 +7,7 @@
   #:transparent)
 
 (struct input
-  (id type size)
+  (string)
   #:transparent)
 
 (struct value
@@ -58,6 +58,10 @@
 
 (struct assign
   (var expr)
+  #:transparent)
+
+(struct input-null
+  (var)
   #:transparent)
 
 (struct inicializador

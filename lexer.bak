@@ -28,6 +28,7 @@
    TO
    BEGIN
    END
+   INT
    PRINT
    INPUT))
 
@@ -59,7 +60,8 @@
    ["end" (token-END)]
    ["print" (token-PRINT)]
    ["input" (token-INPUT)]
-   
+   ["int" (token-INT)]
+   [(:: "//" (:* (:~ #\newline)) #\newline) (return-without-pos (next-token input-port))]
    [(:: alphabetic (:* (:+ alphabetic numeric)))
     (token-IDENTIFIER lexeme)]
    [(:: numeric (:* numeric))

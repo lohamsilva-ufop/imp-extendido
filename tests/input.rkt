@@ -1,4 +1,4 @@
-#lang imp-extendido/gerador/debug/parser-only
+#lang imp-extendido/debug/parser-only
 
 /*ignorado*/
 /*Este comentário será ignorado*/

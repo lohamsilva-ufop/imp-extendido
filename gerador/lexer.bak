@@ -3,6 +3,7 @@
 (require parser-tools/lex
          (prefix-in : parser-tools/lex-sre))
 
+
 (define-tokens value-tokens (NUMBER))
 (define-tokens var-tokens (IDENTIFIER))
 (define-empty-tokens syntax-tokens
@@ -20,6 +21,7 @@
    COMMA
    LPAREN
    RPAREN
+   ARROBA
    IF
    THEN
    ELSE
@@ -29,8 +31,13 @@
    TO
    BEGIN
    END
+   INT
+   FLOAT
+   DOUBLE
+   STRING
    PRINT
-   INPUT))
+   INPUT
+   COMMENT))
 
 (define next-token
   (lexer-src-pos
@@ -50,6 +57,7 @@
    [","  (token-COMMA)]
    ["("  (token-LPAREN)]
    [")"  (token-RPAREN)]
+   ["@"  (token-ARROBA)]
    ["if" (token-IF)]
    ["then" (token-THEN)]
    ["else" (token-ELSE)]
@@ -59,8 +67,13 @@
    ["do" (token-DO)]
    ["begin" (token-BEGIN)]
    ["end" (token-END)]
+   ["int" (token-INT)]
+   ["float" (token-FLOAT)]
+   ["double" (token-DOUBLE)]
+   ["string" (token-STRING)]
    ["print" (token-PRINT)]
    ["input" (token-INPUT)]
+   ["//" (token-COMMENT)]
    [(:: alphabetic (:* (:+ alphabetic numeric)))
     (token-IDENTIFIER lexeme)]
    [(:: numeric (:* numeric))

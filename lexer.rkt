@@ -17,6 +17,7 @@
    NOT
    AND
    SEMI
+   COMMA
    LPAREN
    RPAREN
    IF
@@ -29,8 +30,12 @@
    BEGIN
    END
    INT
+   FLOAT
+   DOUBLE
+   STRING
    PRINT
-   INPUT))
+   INPUT
+   INPUT_COMMENT))
 
 (define next-token
   (lexer-src-pos
@@ -47,6 +52,7 @@
    ["!"  (token-NOT)]
    ["&&" (token-AND)]
    [";"  (token-SEMI)]
+   [","  (token-COMMA)]
    ["("  (token-LPAREN)]
    [")"  (token-RPAREN)]
    ["if" (token-IF)]
@@ -61,7 +67,9 @@
    ["print" (token-PRINT)]
    ["input" (token-INPUT)]
    ["int" (token-INT)]
-   
+   ["//@" (token-INPUT_COMMENT)]
+   [(:: "/*" (complement (:: any-string "*/" any-string)) "*/") (return-without-pos (next-token input-port))]
+   [(:: "//" (:* (:~ #\newline)) #\newline) (return-without-pos (next-token input-port))]
    [(:: alphabetic (:* (:+ alphabetic numeric)))
     (token-IDENTIFIER lexeme)]
    [(:: numeric (:* numeric))

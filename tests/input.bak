@@ -1,0 +1,18 @@
+#lang imp-extendido
+
+/*ignorado*/
+/*Este comentário será ignorado*/
+
+
+input entrada;  //@int, entrada, 500
+input saida; 
+
+/*atribuindo a idade*/
+idade := 25;
+/*mostrando a idade*/
+print idade;
+
+//@float, saida, 450
+
+/*ignorado*/
+/*Este comentário será ignorado*/

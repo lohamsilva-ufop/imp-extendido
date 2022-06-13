@@ -29,7 +29,8 @@
                [(IF expr THEN block ELSE block) (eif $2 $4 $6)]
                [(WHILE expr DO block) (ewhile $2 $4)]
                [(FOR init TO expr DO block) (efor $2 $4 $6)]
-               [(INPUT IDENTIFIER SEMI) (input (var $2))])
+               [(INPUT IDENTIFIER SEMI) (xinput (var $2))]
+               [(INPUT_COMMENT tipo IDENTIFIER sinalizador) (input $2 (var $3) $4)])
     (block [(BEGIN statements END) $2])
     (expr  [(NUMBER) (value $1)]
            [(IDENTIFIER) (var $1)]
@@ -41,7 +42,17 @@
            [(expr EQ expr) (eeq $1 $3)]
            [(expr AND expr) (eand $1 $3)]
            [(NOT expr) (enot $2)]
-           [(LPAREN expr RPAREN) $2]))
+           [(LPAREN expr RPAREN) $2])
+
+ (tipo
+          [(INT COMMA) (type "int")]
+          [(FLOAT COMMA) (type "float")]
+          [(DOUBLE COMMA) (type "double")]
+          [(STRING COMMA) (type "string")])
+
+    
+    (sinalizador [(COMMA expr) $2])
+    )
    ))
 
 (define (parse ip)

@@ -8,7 +8,7 @@
   (parser
    (start statements)
    (end EOF)
-   (tokens value-tokens var-tokens syntax-tokens)
+   (tokens value-tokens var-tokens gen-tokens syntax-tokens)
    (src-pos)
    (error
     (lambda (a b c d e)
@@ -23,14 +23,20 @@
     (init [(IDENTIFIER ASSIGN expr) (assign (var $1) $3)])
     (statements [() '()]
                 [(statement statements) (cons $1 $2)])
+    ;//@testecases, numero
+    ;//@nome, tipo
+    ;fazer o parser para outra linguagem (open-input-string)
     (statement [(IDENTIFIER ASSIGN expr SEMI) (assign (var $1) $3)]
                [(IDENTIFIER ASSIGN expr) (assign (var $1) $3)]
                [(PRINT expr SEMI) (sprint $2)]
                [(IF expr THEN block ELSE block) (eif $2 $4 $6)]
                [(WHILE expr DO block) (ewhile $2 $4)]
                [(FOR init TO expr DO block) (efor $2 $4 $6)]
-               [(INPUT IDENTIFIER SEMI COMMENT tipo sinalizador) (input (var $2) $5 $6)])
+               [(INPUT IDENTIFIER SEMI) (input-null (var $2))]
+               [(INPUT_COMMENT) (input $1)])
+    
     (block [(BEGIN statements END) $2])
+    
     (expr  [(NUMBER) (value $1)]
            [(IDENTIFIER) (var $1)]
            [(expr ADD expr) (add $1 $3)]
@@ -43,16 +49,13 @@
            [(NOT expr) (enot $2)]
            [(LPAREN expr RPAREN) $2])
     (tipo
-          [(INT) (type "int")]
-          [(FLOAT) (type "float")]
-          [(DOUBLE) (type "double")]
-          [(STRING) (type "string")])    
-    (sinalizador
-          [(COMMA expr) $2]
-          [(COMMA expr) $2]
-          [(COMMA expr) $2]
-          [(COMMA expr) $2]
-    )
+          [(INT COMMA) (type "int")]
+          [(FLOAT COMMA) (type "float")]
+          [(DOUBLE COMMA) (type "double")]
+          [(STRING COMMA) (type "string")])
+
+    
+    (sinalizador [(COMMA expr) $2])
 )
 ))
 

@@ -80,7 +80,7 @@
 
 (define (eval-stmt env s)
   (match s
-    [(input (var v))
+    [(xinput (var v))
      (begin
         (display "Entre com um valor:")
         (read-value env v))]

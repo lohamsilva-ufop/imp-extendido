@@ -2,12 +2,20 @@
 
 ;; expression syntax
 
+(struct type
+  (name)
+  #:transparent)
+
 (struct input
-  (id)
+  (type id size)
   #:transparent)
 
 (struct value
   (value)
+  #:transparent)
+
+(struct xinput
+  (var)
   #:transparent)
 
 (struct var

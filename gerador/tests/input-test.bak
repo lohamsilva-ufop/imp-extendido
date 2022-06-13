@@ -1,1 +1,6 @@
-#lang imp-extendido/gerador/gen.rkt
+#lang imp-extendido/gerador/debug/parser-only
+
+input entrada;  //@int, entrada, 500
+input saida;
+
+//@float, saida, 450

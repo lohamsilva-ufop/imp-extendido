@@ -2,6 +2,22 @@
 
 (require "syntax.rkt")
 
+
+(define (eval-for env x stop block)
+(let* (
+        [e1 (lt x stop)]
+        [c (eval-expr env e1)]
+        [env1 (car c)])
+
+         (if (true-value? (cdr c))
+           (let* ([env2 (eval-stmts env1 block)]
+                  [value-x (cdr (lookup-env env2 x))]
+                  [value-1 (value 1)]
+                  [z (op-value + env2 value-x value-1)]
+                  [env3 (hash-set (car z) x (cdr z))])
+                      (eval-for env3 x stop block))
+           env))) 
+
 ;; reading a value
 
 (define (read-value env v)
@@ -31,8 +47,8 @@
     (op-value f (car r2) (cdr r1) (cdr r2))))
 
 
-;; eval-expr : env * expr -> env * expr
-
+;; eval-expr : env * expr -> env * expr (value)
+ 
 (define (eval-expr env e)
   (match e
     [(value val) (cons env (value val))]
@@ -64,7 +80,7 @@
 
 (define (eval-stmt env s)
   (match s
-    [(input (var v))
+    [(xinput (var v))
      (begin
         (display "Entre com um valor:")
         (read-value env v))]
@@ -74,6 +90,8 @@
        (if (true-value? (cdr c))
            (eval-stmts env blk1)
            (eval-stmts env blk2)))]
+
+    
     [(ewhile e1 blk1)
      (let ([c (eval-expr env e1)])
        (if (true-value? (cdr c))
@@ -85,26 +103,32 @@
 
 
 
+;para a consolidação do FOR, temos duas etapas:
+; 1 - atribuir o valor da variável (manda um env e a expressao e retorna um env)
+; 2 - avaliar a expressao. se verdadeiro, executado o bloco e incrementa 1. Senao, retorna env.
 
+[(efor (assign x e) stop block)
+;passo 1: atribuição - chama a função eval 
+(let* ([p (eval-expr env e)]
+       [env1 (car p)]
+       [v1 (cdr p)]
+       [env2 (hash-set env1 x v1)])
 
-[(efor init stop iter block)
-;trata init
- (eval-stmt env init)
+;passo 2: avaliar a expressao:
 
-     (let ([c (eval-expr env (lt init stop))])
-       (if (true-value? (cdr c))
-           (eval-stmt (eval-stmts env block)
-                      (eval-expr env iter)
-                      (efor init stop iter block))
-           env))]
+(let* (
+        [e1 (lt x stop)]
+        [c (eval-expr env1 e1)])
 
-
-
-
-
-
-
-
+         (if (true-value? (cdr c))
+           (let* ([env3 (eval-stmts env2 block)]
+                  [value-x (cdr (lookup-env env3 x))]
+                  [value-1 (value 1)]
+                  [z (op-value + env3 value-x value-1)]
+                  [env4 (hash-set (car z) x (cdr z))])
+                      (eval-for env4 x stop block))
+                      
+           env)))]
 
 
     
@@ -120,6 +144,7 @@
     ['() env]
     [(cons s blks) (let ([nenv (eval-stmt env s)])
                        (eval-stmts nenv blks))]))
+
 
 
 (define (imp-extendido-interp prog)

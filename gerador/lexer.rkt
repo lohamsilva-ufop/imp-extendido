@@ -3,8 +3,10 @@
 (require parser-tools/lex
          (prefix-in : parser-tools/lex-sre))
 
+
 (define-tokens value-tokens (NUMBER))
 (define-tokens var-tokens (IDENTIFIER))
+(define-tokens gen-tokens (INPUT_COMMENT))
 (define-empty-tokens syntax-tokens
   (EOF
    ADD
@@ -34,8 +36,7 @@
    DOUBLE
    STRING
    PRINT
-   INPUT
-   COMMENT))
+   INPUT))
 
 (define next-token
   (lexer-src-pos
@@ -70,10 +71,12 @@
    ["string" (token-STRING)]
    ["print" (token-PRINT)]
    ["input" (token-INPUT)]
-   ["//" (token-COMMENT)]
+   [(:: "//@" (:*(complement (:: any-string #\newline any-string))) #\newline)  (token-INPUT_COMMENT lexeme)]
+   [(:: "//" (:~ "@") (:*(complement (:: any-string #\newline any-string))) #\newline) (return-without-pos (next-token input-port))]
+   [(:: "/*" (complement (:: any-string "*/" any-string)) "*/") (return-without-pos (next-token input-port))]
    [(:: alphabetic (:* (:+ alphabetic numeric)))
     (token-IDENTIFIER lexeme)]
    [(:: numeric (:* numeric))
     (token-NUMBER (string->number lexeme))]))
 
-(provide next-token value-tokens var-tokens syntax-tokens)
+(provide next-token value-tokens var-tokens gen-tokens syntax-tokens)

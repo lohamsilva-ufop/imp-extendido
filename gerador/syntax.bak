@@ -2,8 +2,12 @@
 
 ;; expression syntax
 
+(struct type
+  (name)
+  #:transparent)
+
 (struct input
-  (id )
+  (type id size)
   #:transparent)
 
 (struct value
@@ -54,6 +58,10 @@
 
 (struct assign
   (var expr)
+  #:transparent)
+
+(struct assign-null
+  (var)
   #:transparent)
 
 (struct inicializador

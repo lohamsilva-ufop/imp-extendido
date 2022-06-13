@@ -1,19 +1,12 @@
 #lang imp-extendido
 n:=5;
 
+//este é um comentario que será desconsiderado
+//@int, entrada, 500
+//veja, foi desconsiderado de novo.
+
 for i:=0 to n do
 begin
  print i;
  i:= i+1;
 end
-
-while i < n do
-begin
-print i;
-i := i + 1;
-end
-
-
-
-
-
