@@ -23,14 +23,9 @@
 
 ;; reading a value
 
-(define (read-value env type var size gerador)
+(define (read-value env string gerador)
   (begin
-     (display "Variável: ")
-     (displayln (var-id var))
-     (display "Tipo:  ")
-     (displayln (type-name type))
-     (display "Tamanho: ")
-     (displayln (value-value size))
+     (display string)
   ))
 
 ;; looking up an environment
@@ -78,23 +73,33 @@
 ; eval-assign : environment * var * expr -> environment
 
 (define (eval-assign env v e)
+  (begin
+
+    (display "Tabela hash: ")
+    (display env)
+     (display "\n")
+    (display v)
+    (display "\n")
+    (display e)
+    )
   (let* ([res (eval-expr env e)])
     (hash-set env v (cdr res))))
-
-(define (eval-assign-null env v)
-    (hash-set env v null))
 
 ; eval-stmt : environment * statement -> environment
 
 
 (define (eval-stmt env s gerador)
   (match s
-    [(input type (var v) size)
-        (read-value env type v size gerador)]
+    [(input string)
+        (read-value env string gerador)]
 
     [(assign v e) (eval-assign env (var-id v) e)]
 
-    [(assign-null v) (eval-assign-null env (var-id v))]
+    [(input-null v)
+
+
+
+    ]
     
     [(eif e1 blk1 blk2)
      (let ([c (eval-expr env e1)])
@@ -109,10 +114,6 @@
            (eval-stmt (eval-stmts env blk1)
                       (ewhile e1 blk1))
            env))]
-
-
-
-
 
 ;para a consolidação do FOR, temos duas etapas:
 ; 1 - atribuir o valor da variável (manda um env e a expressao e retorna um env)
@@ -141,8 +142,6 @@
                       
            env)))]
 
-
-    
     [(sprint e1)
      (let ([v (eval-expr env e1)])
        (begin
@@ -155,8 +154,6 @@
     ['() env]
     [(cons s blks) (let ([nenv (eval-stmt env s gerador)])
                        (eval-stmts nenv blks gerador))]))
-
-
 
 (define (imp-extendido-interp prog)
   (eval-stmts (make-immutable-hash) prog gerador))

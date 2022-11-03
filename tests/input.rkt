@@ -1,4 +1,4 @@
-#lang imp-extendido/debug/parser-only
+#lang imp-extendido
 
 /*ignorado*/
 /*Este comentário será ignorado*/
